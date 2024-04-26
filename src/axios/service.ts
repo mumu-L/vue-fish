@@ -33,8 +33,16 @@ axiosInstance.interceptors.response.use(
     return res
   },
   (error: AxiosError) => {
-    console.log('err： ' + error) // for debug
-    ElMessage.error(error.message)
+    console.log(error) // for debug
+    if (error.response && typeof error.response.data == 'object') {
+      const res: any = error.response.data
+      if (res.code == 500) {
+        ElMessage.error(res.msg)
+      }
+    } else {
+      ElMessage.error(error.message)
+    }
+
     return Promise.reject(error)
   }
 )

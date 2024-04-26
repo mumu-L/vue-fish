@@ -131,7 +131,7 @@ import { getDetectList, getModel, deleteById } from '@/api/dashboard/workplace'
 import { DataSourceItem } from '@/api/dashboard/workplace/types'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete } from '@element-plus/icons-vue'
-import { onMounted, Ref, computed, shallowReactive } from 'vue'
+import { onMounted, Ref, shallowReactive } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -140,7 +140,7 @@ let route = useRoute()
 const pageNum = ref(1)
 const pageSize = ref(10)
 const total = ref(10)
-const batch: Ref<string> = ref('') //批次
+// const batch: Ref<string> = ref('') //批次
 let modules: Ref<string[]> = ref([])
 const query = shallowReactive({
   batch: '',
@@ -148,77 +148,77 @@ const query = shallowReactive({
   type: null
 })
 
-const totle = computed(() => {
-  let obj: { [key: string]: number } = {
-    direction: 0,
-    fish_w: 0,
-    body_w: 0,
-    body_h: 0,
-    head: 0,
-    mouth: 0,
-    tail_muscles_w: 0,
-    tail_muscles_h: 0,
-    caudal_fin: 0,
-    fish_w_rate: 0,
-    body_w_rate: 0,
-    body_h_rate: 0,
-    head_rate: 0,
-    mouth_rate: 0,
-    tail_w_rate: 0,
-    tail_h_rate: 0,
-    caudal_fin_rate: 0
-  }
-  let rate: { [key: string]: number } = {
-    direction: 0,
-    fish_w: 0,
-    body_w: 0,
-    body_h: 0,
-    head: 0,
-    mouth: 0,
-    tail_muscles_w: 0,
-    tail_muscles_h: 0,
-    caudal_fin: 0,
-    fish_w_rate: 0,
-    body_w_rate: 0,
-    body_h_rate: 0,
-    head_rate: 0,
-    mouth_rate: 0,
-    tail_w_rate: 0,
-    tail_h_rate: 0,
-    caudal_fin_rate: 0
-  }
-  let rarr = [
-    'fish_w_rate',
-    'body_w_rate',
-    'body_h_rate',
-    'head_rate',
-    'mouth_rate',
-    'tail_w_rate',
-    'tail_h_rate',
-    'caudal_fin_rate'
-  ]
-  // let rate:{[key:string]:number} ={
+// const totle = computed(() => {
+//   let obj: { [key: string]: number } = {
+//     direction: 0,
+//     fish_w: 0,
+//     body_w: 0,
+//     body_h: 0,
+//     head: 0,
+//     mouth: 0,
+//     tail_muscles_w: 0,
+//     tail_muscles_h: 0,
+//     caudal_fin: 0,
+//     fish_w_rate: 0,
+//     body_w_rate: 0,
+//     body_h_rate: 0,
+//     head_rate: 0,
+//     mouth_rate: 0,
+//     tail_w_rate: 0,
+//     tail_h_rate: 0,
+//     caudal_fin_rate: 0
+//   }
+//   let rate: { [key: string]: number } = {
+//     direction: 0,
+//     fish_w: 0,
+//     body_w: 0,
+//     body_h: 0,
+//     head: 0,
+//     mouth: 0,
+//     tail_muscles_w: 0,
+//     tail_muscles_h: 0,
+//     caudal_fin: 0,
+//     fish_w_rate: 0,
+//     body_w_rate: 0,
+//     body_h_rate: 0,
+//     head_rate: 0,
+//     mouth_rate: 0,
+//     tail_w_rate: 0,
+//     tail_h_rate: 0,
+//     caudal_fin_rate: 0
+//   }
+//   let rarr = [
+//     'fish_w_rate',
+//     'body_w_rate',
+//     'body_h_rate',
+//     'head_rate',
+//     'mouth_rate',
+//     'tail_w_rate',
+//     'tail_h_rate',
+//     'caudal_fin_rate'
+//   ]
+//   // let rate:{[key:string]:number} ={
 
-  // }
-  detectSource.value.forEach((f) => {
-    Object.keys(obj).forEach((o: string) => {
-      if (Number(f[o]) !== 0) {
-        obj[o]++
-        if (rarr.includes(o)) {
-          console.log(f[o])
-          //找出误差小于0.11大于0.89的
-          if (Number(f[o]) > 0.89 && Number(f[o]) < 1.11) {
-            rate[o]++
-          }
-        }
-      }
-    })
-  })
-  return {
-    discern: obj,
-    rate: rate
-  }
-})
+//   // }
+//   detectSource.value.forEach((f) => {
+//     Object.keys(obj).forEach((o: string) => {
+//       if (Number(f[o]) !== 0) {
+//         obj[o]++
+//         if (rarr.includes(o)) {
+//           console.log(f[o])
+//           //找出误差小于0.11大于0.89的
+//           if (Number(f[o]) > 0.89 && Number(f[o]) < 1.11) {
+//             rate[o]++
+//           }
+//         }
+//       }
+//     })
+//   })
+//   return {
+//     discern: obj,
+//     rate: rate
+//   }
+// })
 const detectList: CloumnItem[] = []
 const descList: CloumnItem[] = []
 const creatCloumn = () => {

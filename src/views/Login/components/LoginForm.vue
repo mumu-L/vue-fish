@@ -11,7 +11,6 @@ import { useRouter } from 'vue-router'
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
 import { UserType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
-import { Icon } from '@/components/Icon'
 import { useUserStore } from '@/store/modules/user'
 import { BaseButton } from '@/components/Button'
 
@@ -138,7 +137,7 @@ const schema = reactive<FormSchema[]>([
   // }
 ])
 
-const iconSize = 30
+//const iconSize = 30
 
 const remember = ref(userStore.getRememberMe)
 
@@ -158,9 +157,9 @@ const { getFormData, getElFormExpose, setValues } = formMethods
 
 const loading = ref(false)
 
-const iconColor = '#999'
+//const iconColor = '#999'
 
-const hoverColor = 'var(--el-color-primary)'
+//const hoverColor = 'var(--el-color-primary)'
 
 const redirect = ref<string>('')
 

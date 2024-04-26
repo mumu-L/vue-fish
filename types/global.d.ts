@@ -44,12 +44,24 @@ declare global {
     headers?: RawAxiosRequestHeaders
     responseType?: AxiosResponseType
   }
-
+  export type CloumnItem = {
+    title: string
+    dataIndex: string
+    key: string
+    ellipsis: boolean
+  }
   declare interface IResponse<T = any> {
     code: number
     data: T extends any ? T : T & any
+    msg: string
   }
-
+  declare interface QueryPage<T> {
+    list: T
+    page: number
+    pages: number
+    pageSize: number
+    total: number
+  }
   declare interface ThemeTypes {
     elColorPrimary?: string
     leftMenuBorderColor?: string

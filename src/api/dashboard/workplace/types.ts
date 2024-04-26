@@ -28,3 +28,23 @@ export type RadarData = {
   max: number
   name: string
 }
+
+export type ModuleItem = string[]
+
+// export interface Modules {
+//   ['string']: any
+//   data: ModuleItem
+// }
+
+export interface ResponseModules<T> {
+  code: string
+  data: T
+  msg: string
+}
+
+/**
+ * 检测列表
+ */
+export type DataSourceItem = {
+  [key: string]: string | number | null
+}

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useTagsViewStore } from '@/store/modules/tagsView'
-import { useAppStore } from '@/store/modules/app'
-import { Footer } from '@/components/Footer'
+// import { useAppStore } from '@/store/modules/app'
+// import { Footer } from '@/components/Footer'
 import { computed } from 'vue'
 
-const appStore = useAppStore()
+// const appStore = useAppStore()
 
-const footer = computed(() => appStore.getFooter)
+// const footer = computed(() => appStore.getFooter)
 
 const tagsViewStore = useTagsViewStore()
 
@@ -18,7 +18,7 @@ const getCaches = computed((): string[] => {
 <template>
   <section
     :class="[
-      'flex-1 p-[var(--app-content-padding)] w-[calc(100%-var(--app-content-padding)-var(--app-content-padding))] bg-[var(--app-content-bg-color)] dark:bg-[var(--el-bg-color)]'
+      'flex-1 p-[var(--app-content-padding)] w-[calc(100%-var(--app-content-padding)-var(--app-content-padding))] bg-[var(--app-content-bg-color)] dark:bg-[var(--el-bg-color)] h-[calc(100%-var(--app-content-padding)-var(--app-content-padding)-1px-var(--logo-height)-var(--tags-view-height))] '
     ]"
   >
     <router-view>
@@ -29,5 +29,5 @@ const getCaches = computed((): string[] => {
       </template>
     </router-view>
   </section>
-  <Footer v-if="footer" />
+  <!-- <Footer v-if="footer" /> -->
 </template>

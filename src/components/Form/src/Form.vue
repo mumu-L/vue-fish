@@ -233,11 +233,7 @@ export default defineComponent({
         .filter((v) => !v.remove && !v.hidden)
         .map((item) => {
           // 如果是 Divider 组件，需要自己占用一行
-          const isDivider = item.component === 'Divider'
-          const Com = componentMap['Divider'] as ReturnType<typeof defineComponent>
-          return isDivider ? (
-            <Com {...{ contentPosition: 'left', ...item.componentProps }}>{item?.label}</Com>
-          ) : isCol ? (
+          return isCol ? (
             // 如果需要栅格，需要包裹 ElCol
             <ElCol {...setGridProp(item.colProps)}>{renderFormItem(item)}</ElCol>
           ) : (

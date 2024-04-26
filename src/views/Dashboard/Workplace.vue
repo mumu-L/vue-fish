@@ -94,7 +94,7 @@ const detectStart = (tag: string | null = null) => {
       // queryList()
       // loading.value = false
     })
-    .catch((e) => {
+    .catch(() => {
       loading.value = false
     })
 }

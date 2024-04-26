@@ -93,8 +93,7 @@ import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
 import { updateConfig, deteleConfig, getConfigList } from '@/api/dashboard/config'
 import { ConfigItem } from '@/api/dashboard/config/types'
 import { getModel } from '@/api/dashboard/workplace'
-import { TableColumn } from '@/components/Table/src/types'
-import { onMounted, Ref, computed, shallowReactive, reactive } from 'vue'
+import { onMounted, Ref, shallowReactive, reactive } from 'vue'
 import { ref } from 'vue'
 //弹框
 const dialogVisible: Ref<Boolean> = ref(false)
@@ -226,7 +225,7 @@ const configAPI = async (params, type) => {
 //提交配置
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     console.log(valid)
     if (valid) {
       configAPI(config, !!config.id ? 'update' : 'add')
