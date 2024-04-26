@@ -39,7 +39,6 @@ import './permission'
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
-
   await setupI18n(app)
 
   setupStore(app)

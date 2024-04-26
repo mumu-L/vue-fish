@@ -1,293 +1,188 @@
 <script setup lang="ts">
-import { useTimeAgo } from '@/hooks/web/useTimeAgo'
-import { ElRow, ElCol, ElSkeleton, ElCard, ElDivider, ElLink } from 'element-plus'
+import { Descriptions } from '@/components/Descriptions'
+import { getModel, start } from '@/api/dashboard/workplace/index'
+import { getConfigList } from '@/api/dashboard/config/index'
+import { onMounted, Ref, ShallowReactive, shallowReactive } from 'vue'
+import { ref } from 'vue'
+import { DataSourceItem } from '@/api/dashboard/workplace/types'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ref, reactive } from 'vue'
-import { CountTo } from '@/components/CountTo'
-import { formatTime } from '@/utils'
-import { Echart } from '@/components/Echart'
-import { EChartsOption } from 'echarts'
-import { radarOption } from './echarts-data'
-import { Highlight } from '@/components/Highlight'
-import {
-  getCountApi,
-  getProjectApi,
-  getDynamicApi,
-  getTeamApi,
-  getRadarApi
-} from '@/api/dashboard/workplace'
-import type { WorkplaceTotal, Project, Dynamic, Team } from '@/api/dashboard/workplace/types'
-import { set } from 'lodash-es'
+import { reactive } from 'vue'
+import { DescriptionsSchema } from '@/components/Descriptions/src/types'
+import { ConfigItem } from '@/api/dashboard/config/types'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
 
-const loading = ref(true)
-
-// 获取统计数
-let totalSate = reactive<WorkplaceTotal>({
-  project: 0,
-  access: 0,
-  todo: 0
+const imgUrl = ref('')
+let detectSource: ShallowReactive<DataSourceItem> = shallowReactive({})
+let loading = ref(false)
+const currentConf = ref(0)
+let config = reactive({
+  conf: 0.6,
+  iou: '',
+  imagz: '',
+  batch: null, //批次
+  module: 'yolo8n/v1-1'
 })
 
-const getCount = async () => {
-  const res = await getCountApi().catch(() => {})
-  if (res) {
-    totalSate = Object.assign(totalSate, res.data)
+let modules: Ref<string[]> = ref([])
+let confList: Ref<ConfigItem[]> = ref([
+  {
+    id: '1',
+    name: '配置1',
+    module: '',
+    conf: 0.6,
+    iou: null,
+    imagz: null,
+    active: 0
+  },
+  {
+    id: '2',
+    name: '配置2',
+    module: '',
+    conf: 0.8,
+    iou: null,
+    imagz: null,
+    active: 0
   }
+])
+const schema = reactive<DescriptionsSchema[]>([])
+//摄像头是否开启
+// let isCamera:Ref<boolean> = ref(false)
+const keys: string[] = [
+  'direction',
+  'fish_w',
+  'body_w',
+  'body_h',
+  'head',
+  'mouth',
+  'tail_muscles_w',
+  'tail_muscles_h',
+  'caudal_fin',
+  'use_model',
+  'link'
+  // 'created_at'
+]
+keys.forEach((key) => {
+  schema.push({
+    field: key,
+    label: t(`analysis.${key}`),
+    span: 12
+  })
+})
+const enginStart = () => {
+  let module = config.module
+  let str = module.replaceAll('/', '&')
+  imgUrl.value = imgUrl.value !== '' ? '' : `/api/task/open_camera/${str}/${config.conf}`
+  // imgUrl.value = imgUrl.value !== '' ? '' : `/api/task/open_camera/${str}/${config.conf}`
 }
 
-let projects = reactive<Project[]>([])
-
-// 获取项目数
-const getProject = async () => {
-  const res = await getProjectApi().catch(() => {})
-  if (res) {
-    projects = Object.assign(projects, res.data)
-  }
-}
-
-// 获取动态
-let dynamics = reactive<Dynamic[]>([])
-
-const getDynamic = async () => {
-  const res = await getDynamicApi().catch(() => {})
-  if (res) {
-    dynamics = Object.assign(dynamics, res.data)
-  }
-}
-
-// 获取团队
-let team = reactive<Team[]>([])
-
-const getTeam = async () => {
-  const res = await getTeamApi().catch(() => {})
-  if (res) {
-    team = Object.assign(team, res.data)
-  }
-}
-
-// 获取指数
-let radarOptionData = reactive<EChartsOption>(radarOption) as EChartsOption
-
-const getRadar = async () => {
-  const res = await getRadarApi().catch(() => {})
-  if (res) {
-    set(
-      radarOptionData,
-      'radar.indicator',
-      res.data.map((v) => {
-        return {
-          name: t(v.name),
-          max: v.max
-        }
-      })
-    )
-    set(radarOptionData, 'series', [
-      {
-        name: `xxx${t('workplace.index')}`,
-        type: 'radar',
-        data: [
-          {
-            value: res.data.map((v) => v.personal),
-            name: t('workplace.personal')
-          },
-          {
-            value: res.data.map((v) => v.team),
-            name: t('workplace.team')
-          }
-        ]
+const detectStart = (tag: string | null = null) => {
+  loading.value = true
+  start({
+    conf: config.conf,
+    module: config.module,
+    type: tag,
+    batch: config.batch ? config.batch : new Date().getTime()
+  })
+    .then((res) => {
+      if (res.code == 200) {
+        loading.value = false
+        Object.assign(detectSource, res.data)
+        ElMessage.success(res.msg)
       }
-    ])
-  }
+
+      // queryList()
+      // loading.value = false
+    })
+    .catch((e) => {
+      loading.value = false
+    })
 }
-
-const getAllApi = async () => {
-  await Promise.all([getCount(), getProject(), getDynamic(), getTeam(), getRadar()])
-  loading.value = false
+//切换配置
+const checkConf = () => {
+  Object.assign(config, confList.value[currentConf.value])
 }
-
-getAllApi()
-
-const { t } = useI18n()
+onMounted(() => {
+  // getFish().then((res) => {
+  //   dataSource.value = res.data
+  // })
+  // queryList()
+  //获取模型
+  getModel().then((res) => {
+    // console.log(res)
+    modules.value = res.data
+    Object.assign(config, {
+      currentModule: res.data[0]
+    })
+  })
+  getConfigList().then((res) => {
+    confList.value = res.data
+  })
+})
 </script>
 
 <template>
-  <div>
-    <ElCard shadow="never">
-      <ElSkeleton :loading="loading" animated>
-        <ElRow :gutter="20" justify="space-between">
-          <ElCol :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
-            <div class="flex items-center">
-              <img
-                src="@/assets/imgs/avatar.jpg"
-                alt=""
-                class="w-70px h-70px rounded-[50%] mr-20px"
-              />
-              <div>
-                <div class="text-20px">
-                  {{ t('workplace.goodMorning') }}，Archer，{{ t('workplace.happyDay') }}
-                </div>
-                <div class="mt-10px text-14px text-gray-500">
-                  {{ t('workplace.toady') }}，20℃ - 32℃！
-                </div>
-              </div>
-            </div>
-          </ElCol>
-          <ElCol :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
-            <div class="flex h-70px items-center justify-end lt-sm:mt-20px">
-              <div class="px-8px text-right">
-                <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.project') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.project"
-                  :duration="2600"
-                />
-              </div>
-              <ElDivider direction="vertical" />
-              <div class="px-8px text-right">
-                <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.toDo') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.todo"
-                  :duration="2600"
-                />
-              </div>
-              <ElDivider direction="vertical" border-style="dashed" />
-              <div class="px-8px text-right">
-                <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.access') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.access"
-                  :duration="2600"
-                />
-              </div>
-            </div>
-          </ElCol>
-        </ElRow>
-      </ElSkeleton>
-    </ElCard>
+  <div class="w-full flex h-full">
+    <!-- <ElCard shadow="never" class="w-full"> -->
+    <el-image :src="imgUrl" class="w-1000 h-full border-dashed border-2 border-indigo-600">
+      <template #placeholder>
+        <div class="image-slot">请开启摄像头<span class="dot">...</span> </div>
+      </template>
+    </el-image>
+    <!-- <img :src="imgUrl" alt="" /> -->
+    <div class="ml-4">
+      <el-form label-width="80px">
+        <el-form-item label="配置：">
+          <el-select v-model="currentConf" @change="checkConf">
+            <el-option
+              :label="item.name"
+              :value="index"
+              v-for="(item, index) in confList"
+              :key="index"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="置信度：">
+          <el-input v-model="config.conf" disabled="true" />
+        </el-form-item>
+        <el-form-item label="iou：">
+          <el-input v-model="config.iou" disabled="true" />
+        </el-form-item>
+        <el-form-item label="imagz:">
+          <el-input v-model="config.imagz" disabled="true" />
+        </el-form-item>
+        <el-form-item label="模型：">
+          <el-select v-model="config.module" @change="imgUrl = ''" disabled="true">
+            <el-option :label="item" :value="item" v-for="item in modules" :key="item" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="批次：">
+          <el-input v-model="config.batch" />
+        </el-form-item>
+      </el-form>
+      <section class="flex justify-center">
+        <el-button :type="imgUrl !== '' ? 'danger' : 'success'" class="mr-2" @click="enginStart()">
+          {{ imgUrl !== '' ? '关闭摄像头' : '开启摄像头' }}
+        </el-button>
+        <el-button type="primary" class="mr-2" :loading="loading" @click="detectStart()"
+          >开始检测</el-button
+        >
+        <el-button type="warning" :loading="loading" @click="detectStart('test')">测试</el-button>
+      </section>
+      <section class="mt-6">
+        <Descriptions :title="t('analysis.resultText')" :data="detectSource" :schema="schema" />
+        <!-- <Table :columns="columns" :data="detectSource" /> -->
+        <!-- <el-table :data="detectSource">
+          <el-table-column
+            v-for="(item, index) in keys"
+            :prop="item"
+            :label="names[index]"
+            :key="item"
+          >
+        </el-table-column>
+        </el-table> -->
+      </section>
+    </div>
+    <!-- </ElCard> -->
   </div>
-
-  <ElRow class="mt-20px" :gutter="20" justify="space-between">
-    <ElCol :xl="16" :lg="16" :md="24" :sm="24" :xs="24" class="mb-20px">
-      <ElCard shadow="never">
-        <template #header>
-          <div class="flex justify-between">
-            <span>{{ t('workplace.project') }}</span>
-            <ElLink type="primary" :underline="false">{{ t('workplace.more') }}</ElLink>
-          </div>
-        </template>
-        <ElSkeleton :loading="loading" animated>
-          <ElRow>
-            <ElCol
-              v-for="(item, index) in projects"
-              :key="`card-${index}`"
-              :xl="8"
-              :lg="8"
-              :md="12"
-              :sm="24"
-              :xs="24"
-            >
-              <ElCard shadow="hover">
-                <div class="flex items-center">
-                  <Icon :icon="item.icon" :size="25" class="mr-10px" />
-                  <span class="text-16px">{{ item.name }}</span>
-                </div>
-                <div class="mt-15px text-14px text-gray-400">{{ t(item.message) }}</div>
-                <div class="mt-20px text-12px text-gray-400 flex justify-between">
-                  <span>{{ item.personal }}</span>
-                  <span>{{ formatTime(item.time, 'yyyy-MM-dd') }}</span>
-                </div>
-              </ElCard>
-            </ElCol>
-          </ElRow>
-        </ElSkeleton>
-      </ElCard>
-
-      <ElCard shadow="never" class="mt-20px">
-        <template #header>
-          <div class="flex justify-between">
-            <span>{{ t('workplace.dynamic') }}</span>
-            <ElLink type="primary" :underline="false">{{ t('workplace.more') }}</ElLink>
-          </div>
-        </template>
-        <ElSkeleton :loading="loading" animated>
-          <div v-for="(item, index) in dynamics" :key="`dynamics-${index}`">
-            <div class="flex items-center">
-              <img
-                src="@/assets/imgs/avatar.jpg"
-                alt=""
-                class="w-35px h-35px rounded-[50%] mr-20px"
-              />
-              <div>
-                <div class="text-14px">
-                  <Highlight :keys="item.keys.map((v) => t(v))">
-                    {{ t('workplace.pushCode') }}
-                  </Highlight>
-                </div>
-                <div class="mt-15px text-12px text-gray-400">
-                  {{ useTimeAgo(item.time) }}
-                </div>
-              </div>
-            </div>
-            <ElDivider />
-          </div>
-        </ElSkeleton>
-      </ElCard>
-    </ElCol>
-    <ElCol :xl="8" :lg="8" :md="24" :sm="24" :xs="24" class="mb-20px">
-      <ElCard shadow="never">
-        <template #header>
-          <span>{{ t('workplace.shortcutOperation') }}</span>
-        </template>
-        <ElSkeleton :loading="loading" animated>
-          <ElRow>
-            <ElCol
-              v-for="item in 9"
-              :key="`card-${item}`"
-              :xl="12"
-              :lg="12"
-              :md="12"
-              :sm="24"
-              :xs="24"
-              class="mb-10px"
-            >
-              <ElLink type="default" :underline="false">
-                {{ t('workplace.operation') }}{{ item }}
-              </ElLink>
-            </ElCol>
-          </ElRow>
-        </ElSkeleton>
-      </ElCard>
-
-      <ElCard shadow="never" class="mt-20px">
-        <template #header>
-          <span>xx{{ t('workplace.index') }}</span>
-        </template>
-        <ElSkeleton :loading="loading" animated>
-          <Echart :options="radarOptionData" :height="400" />
-        </ElSkeleton>
-      </ElCard>
-
-      <ElCard shadow="never" class="mt-20px">
-        <template #header>
-          <span>{{ t('workplace.team') }}</span>
-        </template>
-        <ElSkeleton :loading="loading" animated>
-          <ElRow>
-            <ElCol v-for="item in team" :key="`team-${item.name}`" :span="12" class="mb-20px">
-              <div class="flex items-center">
-                <Icon :icon="item.icon" class="mr-10px" />
-                <ElLink type="default" :underline="false">
-                  {{ item.name }}
-                </ElLink>
-              </div>
-            </ElCol>
-          </ElRow>
-        </ElSkeleton>
-      </ElCard>
-    </ElCol>
-  </ElRow>
 </template>

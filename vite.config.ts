@@ -14,6 +14,8 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import'
 import UnoCSS from 'unocss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { codeInspectorPlugin } from 'code-inspector-plugin'
+import Inspect from 'vite-plugin-inspect'
 
 // https://vitejs.dev/config/
 const root = process.cwd()
@@ -42,6 +44,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       VueJsx(),
       ServerUrlCopy(),
       progress(),
+      Inspect(),
+      codeInspectorPlugin({
+        bundler: 'vite'
+      }),
       env.VITE_USE_ALL_ELEMENT_PLUS_STYLE === 'false'
         ? createStyleImportPlugin({
             resolves: [ElementPlusResolve()],
@@ -140,9 +146,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     server: {
       port: 4000,
       proxy: {
+        '/api/mock': {
+          target: 'http://127.0.0.1:4000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
         // 选项写法
         '/api': {
-          target: 'http://127.0.0.1:8000',
+          target: 'http://127.0.0.1:5000',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }

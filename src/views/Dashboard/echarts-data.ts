@@ -5,7 +5,7 @@ const { t } = useI18n()
 
 export const lineOptions: EChartsOption = {
   title: {
-    text: t('analysis.monthlySales'),
+    text: t('analysis.moduleContrast'),
     left: 'center'
   },
   xAxis: {
@@ -56,7 +56,7 @@ export const lineOptions: EChartsOption = {
       name: t('analysis.estimate'),
       smooth: true,
       type: 'line',
-      data: [100, 120, 161, 134, 105, 160, 165, 114, 163, 185, 118, 123],
+      data: [],
       animationDuration: 2800,
       animationEasing: 'cubicInOut'
     },
@@ -65,7 +65,7 @@ export const lineOptions: EChartsOption = {
       smooth: true,
       type: 'line',
       itemStyle: {},
-      data: [120, 82, 91, 154, 162, 140, 145, 250, 134, 56, 99, 123],
+      data: [],
       animationDuration: 2800,
       animationEasing: 'quadraticOut'
     }
@@ -74,7 +74,7 @@ export const lineOptions: EChartsOption = {
 
 export const pieOptions: EChartsOption = {
   title: {
-    text: t('analysis.userAccessSource'),
+    text: t('analysis.indicator'),
     left: 'center'
   },
   tooltip: {
@@ -85,25 +85,31 @@ export const pieOptions: EChartsOption = {
     orient: 'vertical',
     left: 'left',
     data: [
-      t('analysis.directAccess'),
-      t('analysis.mailMarketing'),
-      t('analysis.allianceAdvertising'),
-      t('analysis.videoAdvertising'),
-      t('analysis.searchEngines')
+      t('analysis.fish_w_rate'),
+      t('analysis.body_w_rate'),
+      t('analysis.body_h_rate'),
+      t('analysis.head_rate'),
+      t('analysis.mouth_rate'),
+      t('analysis.tail_w_rate'),
+      t('analysis.tail_h_rate'),
+      t('analysis.caudal_fin_rate')
     ]
   },
   series: [
     {
-      name: t('analysis.userAccessSource'),
+      name: t('analysis.indicator'),
       type: 'pie',
       radius: '55%',
       center: ['50%', '60%'],
       data: [
-        { value: 335, name: t('analysis.directAccess') },
-        { value: 310, name: t('analysis.mailMarketing') },
-        { value: 234, name: t('analysis.allianceAdvertising') },
-        { value: 135, name: t('analysis.videoAdvertising') },
-        { value: 1548, name: t('analysis.searchEngines') }
+        { value: 0, name: t('analysis.fish_w_rate') },
+        { value: 0, name: t('analysis.body_w_rate') },
+        { value: 0, name: t('analysis.body_h_rate') },
+        { value: 0, name: t('analysis.head_rate') },
+        { value: 0, name: t('analysis.mouth_rate') },
+        { value: 0, name: t('analysis.tail_w_rate') },
+        { value: 0, name: t('analysis.tail_h_rate') },
+        { value: 0, name: t('analysis.caudal_fin_rate') }
       ]
     }
   ]
@@ -111,7 +117,7 @@ export const pieOptions: EChartsOption = {
 
 export const barOptions: EChartsOption = {
   title: {
-    text: t('analysis.weeklyUserActivity'),
+    text: t('analysis.moduleAndConf'),
     left: 'center'
   },
   tooltip: {
@@ -137,7 +143,7 @@ export const barOptions: EChartsOption = {
       t('analysis.sunday')
     ],
     axisTick: {
-      alignWithLabel: true
+      alignWithLabel: false
     }
   },
   yAxis: {
@@ -146,7 +152,7 @@ export const barOptions: EChartsOption = {
   series: [
     {
       name: t('analysis.activeQuantity'),
-      data: [13253, 34235, 26321, 12340, 24643, 1322, 1324],
+      data: [0, 0, 0, 0, 0, 0, 0],
       type: 'bar'
     }
   ]
@@ -172,11 +178,11 @@ export const radarOption: EChartsOption = {
       type: 'radar',
       data: [
         {
-          value: [42, 30, 20, 35, 80],
+          value: [0, 0, 0, 0, 0],
           name: t('workplace.personal')
         },
         {
-          value: [50, 140, 290, 100, 90],
+          value: [0, 0, 0, 0, 0],
           name: t('workplace.team')
         }
       ]

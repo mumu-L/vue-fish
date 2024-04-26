@@ -63,7 +63,7 @@ export default [
                   id: 3,
                   type: 1,
                   parentId: 1,
-                  title: '工作台',
+                  title: '工作台1',
                   permissionList: [
                     {
                       label: '新增',

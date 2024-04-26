@@ -6,32 +6,45 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { ref, reactive } from 'vue'
 import { getCountApi } from '@/api/dashboard/analysis'
 import type { AnalysisTotalTypes } from '@/api/dashboard/analysis/types'
-
+const props = defineProps({
+  paneData: {
+    type: Object,
+    default: () => {
+      return {
+        detectAll: 0,
+        discern: 0,
+        fullDiscern: 0,
+        accurateDiscern: 0
+      }
+    }
+  }
+})
 const { t } = useI18n()
 
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('panel')
 
-const loading = ref(true)
+const loading = ref(false)
 
-let totalState = reactive<AnalysisTotalTypes>({
-  users: 0,
-  messages: 0,
-  moneys: 0,
-  shoppings: 0
-})
+// let totalState = reactive<AnalysisTotalTypes>({
+//   detectAll: 0,
+//   discern: 0,
+//   fullDiscern: 0,
+//   accurateDiscern: 0
+// })
+// console.log(props.paneData)
+// Object.assign(totalState, props.paneData || {})
+// const getCount = async () => {
+//   const res = await getCountApi()
+//     .catch(() => {})
+//     .finally(() => {
+//       loading.value = false
+//     })
+//   totalState = Object.assign(totalState, res?.data || {})
+// }
 
-const getCount = async () => {
-  const res = await getCountApi()
-    .catch(() => {})
-    .finally(() => {
-      loading.value = false
-    })
-  totalState = Object.assign(totalState, res?.data || {})
-}
-
-getCount()
+// getCount()
 </script>
 
 <template>
@@ -50,12 +63,12 @@ getCount()
               </div>
               <div class="flex flex-col justify-between">
                 <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.newUser')
+                  t('analysis.detectAll')
                 }}</div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
-                  :end-val="102400"
+                  :end-val="props.paneData.detectAll"
                   :duration="2600"
                 />
               </div>
@@ -79,12 +92,12 @@ getCount()
               </div>
               <div class="flex flex-col justify-between">
                 <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.unreadInformation')
+                  t('analysis.discern')
                 }}</div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
-                  :end-val="81212"
+                  :end-val="props.paneData.discern"
                   :duration="2600"
                 />
               </div>
@@ -108,12 +121,12 @@ getCount()
               </div>
               <div class="flex flex-col justify-between">
                 <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.transactionAmount')
+                  t('analysis.fullDiscern')
                 }}</div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
-                  :end-val="9280"
+                  :end-val="props.paneData.fullDiscern"
                   :duration="2600"
                 />
               </div>
@@ -137,12 +150,12 @@ getCount()
               </div>
               <div class="flex flex-col justify-between">
                 <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.totalShopping')
+                  t('analysis.accurateDiscern')
                 }}</div>
                 <CountTo
                   class="text-20px font-700 text-right"
                   :start-val="0"
-                  :end-val="13600"
+                  :end-val="props.paneData.accurateDiscern"
                   :duration="2600"
                 />
               </div>

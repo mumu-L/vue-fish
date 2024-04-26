@@ -1,8 +1,8 @@
 export type AnalysisTotalTypes = {
-  users: number
-  messages: number
-  moneys: number
-  shoppings: number
+  detectAll: number
+  discern: number
+  fullDiscern: number
+  accurateDiscern: number
 }
 
 export type UserAccessSource = {
@@ -19,4 +19,14 @@ export type MonthlySales = {
   name: string
   estimate: number
   actual: number
+}
+
+type Item = {
+  [key: string]: []
+}
+export interface Analysis {
+  panel: Object
+  indicator: Item
+  batchs: Item
+  modules: Item
 }
