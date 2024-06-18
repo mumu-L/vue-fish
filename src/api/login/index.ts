@@ -1,16 +1,19 @@
 import request from '@/axios'
-import type { UserType } from './types'
+import type { UserLoginType, UserResponse, UserType } from './types'
 
 interface RoleParams {
   roleName: string
 }
 
-export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
-  return request.post({ url: '/mock/user/login', data })
+// export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
+//   return request.post({ url: '/mock/user/login', data })
+// }
+export const loginApi = (data: UserLoginType): Promise<IResponse<UserResponse>> => {
+  return request.post({ url: '/user/login', data })
 }
 
 export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/mock/user/loginOut' })
+  return request.get({ url: '/user/loginOut' })
 }
 
 export const getUserListApi = ({ params }: AxiosConfig) => {

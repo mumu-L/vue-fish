@@ -4,7 +4,6 @@ import { useUserStoreWithOut } from '@/store/modules/user'
 
 const request = (option: AxiosConfig) => {
   const { url, method, params, data, headers, responseType } = option
-
   const userStore = useUserStoreWithOut()
   return service.request({
     url: url,

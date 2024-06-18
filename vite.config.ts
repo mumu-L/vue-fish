@@ -19,7 +19,6 @@ import Inspect from 'vite-plugin-inspect'
 
 // https://vitejs.dev/config/
 const root = process.cwd()
-
 function pathResolve(dir: string) {
   return resolve(root, '.', dir)
 }
@@ -146,16 +145,23 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     server: {
       port: 4000,
       proxy: {
-        '/api/mock': {
+        '/dev-api/mock': {
           target: 'http://127.0.0.1:4000',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/dev-api/, '')
         },
         // 选项写法
-        '/api': {
+        '/dev-api': {
           target: 'http://127.0.0.1:5000',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/dev-api/, '')
+        },
+        '/wb': {
+          // target: 'ws://192.168.0.66:60601/',这是后端接口地址
+          target: 'ws://127.0.0.1:5000',
+          changeOrigin: true,
+          ws: true
+          // rewrite: (path) => path.replace(/^\/wb/, '')
         }
       },
       hmr: {

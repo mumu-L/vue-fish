@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import PanelGroup from './components/PanelGroup.vue'
-import { ElRow, ElCol, ElCard, ElSkeleton, ElMessage } from 'element-plus'
+import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
 import { Echart } from '@/components/Echart'
 import { pieOptions, barOptions, lineOptions } from './echarts-data'
 import { ref, reactive, Ref, onMounted } from 'vue'
-import { getData } from '@/api/dashboard/analysis'
 import { set } from 'lodash-es'
 import { EChartsOption } from 'echarts'
 import { useI18n } from '@/hooks/web/useI18n'
 import { getModel } from '@/api/dashboard/workplace'
-
+import { useAppStore } from '@/store/modules/app'
+const appStore = useAppStore()
 const { t } = useI18n()
 const paneData = reactive({
   detectAll: 0,
@@ -59,52 +59,52 @@ const barOptionsData = reactive<EChartsOption>(barOptions) as EChartsOption
 
 const lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
 const queryList = async () => {
-  let res = await getData()
-  if (res.code !== 200) {
-    ElMessage({
-      type: 'error',
-      message: res.msg
-    })
-  }
+  const res = appStore.analysisInfo
+  // if (res.code !== 200) {
+  //   ElMessage({
+  //     type: 'error',
+  //     message: res.msg
+  //   })
+  // }
   // detectSource.value = res.data
-  Object.assign(paneData, res.data.panel)
-  Object.values(res.data.indicator).forEach((item, i) => {
+  Object.assign(paneData, res.panel)
+  Object.values(res.indicator).forEach((item, i) => {
     indicatorRate[i].value = item.length
   })
 
-  Object.assign(barOptionsData, {
-    xAxis: {
-      data: Object.keys(res.data.batchs)
-    },
-    series: [
-      {
-        name: '指标',
-        data: Object.values(res.data.batchs).map((m) => m.length),
-        type: 'bar'
-      }
-    ]
-  })
-  let modules = res.data.modules
-  Object.assign(lineOptionsData, {
-    xAxis: {
-      data: indicatorRate.map((m) => t(m.name))
-    },
-    legend: {
-      data: Object.keys(modules),
-      top: 50
-    },
-    series: Object.entries(modules).map((m) => {
-      return {
-        name: m[0],
-        smooth: true,
-        type: 'line',
-        itemStyle: {},
-        data: m[1],
-        animationDuration: 2800,
-        animationEasing: 'quadraticOut'
-      }
-    })
-  })
+  // Object.assign(barOptionsData, {
+  //   xAxis: {
+  //     data: Object.keys(res.batchs)
+  //   },
+  //   series: [
+  //     {
+  //       name: '指标',
+  //       data: Object.values(res.batchs).map((m) => m.length),
+  //       type: 'bar'
+  //     }
+  //   ]
+  // })
+  // let modules = res.modules
+  // Object.assign(lineOptionsData, {
+  //   xAxis: {
+  //     data: indicatorRate.map((m) => t(m.name))
+  //   },
+  //   legend: {
+  //     data: Object.keys(modules),
+  //     top: 50
+  //   },
+  //   series: Object.entries(modules).map((m) => {
+  //     return {
+  //       name: m[0],
+  //       smooth: true,
+  //       type: 'line',
+  //       itemStyle: {},
+  //       data: m[1],
+  //       animationDuration: 2800,
+  //       animationEasing: 'quadraticOut'
+  //     }
+  //   })
+  // })
   uploadData()
   // getDetectList({
   //   batch: null

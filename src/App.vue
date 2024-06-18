@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { ConfigGlobal } from '@/components/ConfigGlobal'
 import { useDesign } from '@/hooks/web/useDesign'
+import { getData } from '@/api/dashboard/analysis'
 
 const { getPrefixCls } = useDesign()
 
@@ -16,6 +17,13 @@ const greyMode = computed(() => appStore.getGreyMode)
 
 appStore.initTheme()
 
+const getDashbord = async () => {
+  const res = await getData()
+  if (res.code == 200) {
+    appStore.setAnalysisInfo(res.data)
+  }
+}
+getDashbord()
 // ElNotification({
 //   title: '提示',
 //   type: 'warning',

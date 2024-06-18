@@ -2,10 +2,12 @@ export interface UserLoginType {
   username: string
   password: string
 }
-
-export interface UserType {
-  username: string
-  password: string
-  role: string
-  roleId: string
+export type UserResponse = {
+  access_token: string
+  user: Exclude<UserType, { password: string }>
+}
+export type UserInfo = UserLoginType & UserType & Pick<UserResponse, 'access_token'>
+export interface UserType extends UserLoginType {
+  role?: string
+  roleId?: string
 }

@@ -3,7 +3,8 @@ VITE_NODE_ENV=production
 
 # 接口前缀
 VITE_API_BASE_PATH=
-
+#websocketURL
+VITE_WS_URL= 'ws://localhost:5000/wb'
 # 打包路径
 VITE_BASE_PATH=/
 

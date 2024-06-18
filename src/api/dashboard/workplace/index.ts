@@ -32,7 +32,9 @@ export const getFish = (): Promise<any> => {
  * 获取检测列表
  * @returns {AxiosResponse} result
  */
-export const getDetectList = (params?: object): Promise<IResponse<QueryPage<DataSourceItem[]>>> => {
+export const getDetectList = (
+  params: object = {}
+): Promise<IResponse<QueryPage<DataSourceItem[]>>> => {
   return request.post({ url: '/fish/detect_list', data: params })
 }
 export const deleteById = (id: string, type: string | null): Promise<IResponse> => {
@@ -52,11 +54,36 @@ export const startEngine = (): Promise<any> => {
 export const start = (params: object): Promise<any> => {
   return request.post({ url: '/task/detect', data: params })
 }
-
+/**
+ * ，打开或关闭
+ */
+// export const switchCamera = (): Promise<IResponse> => {
+//   return request.get({ url: '/task/switch_camera' })
+// }
+/**
+ *获取摄像头列表
+ * @returns
+ */
+export const GetCameraList = (): Promise<IResponse<string[]>> => {
+  return request.get({ url: '/device/camera_list' })
+}
 /**
  * 获取所有模型
  * @returns
  */
 export const getModel = async (): Promise<IResponse<ModuleItem>> => {
-  return await request.get({ url: '/get_module' })
+  return await request.get({ url: '/config/get_module' })
+}
+/**
+ * 下载数据csv格式
+ * @param { Object } params
+ * @param { String } params.type 1实时/0测试
+ * @returns File
+ */
+export const downFile = async (params) => {
+  return await request.get({
+    url: '/file/csv_down',
+    params: params,
+    responseType: 'blob'
+  })
 }

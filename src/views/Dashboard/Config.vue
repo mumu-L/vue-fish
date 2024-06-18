@@ -27,23 +27,46 @@
           :label="col.title"
           :key="col.dataIndex"
         >
-          <template #default="scope" v-if="col.dataIndex == 'active'">
+          <template #default="scope" v-if="col.dataIndex == 'remark'">
+            <span>{{ scope.row.remark || '-' }}</span>
+          </template>
+          <template #default="scope" v-else-if="col.dataIndex == 'active'">
             <el-tag :type="scope.row.active == 0 ? 'info' : 'success'">{{
               scope.row.active == 0 ? '未激活' : '已激活'
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" :min-width="110">
           <template #default="scope">
-            <el-button size="mini" @click="updateConf(scope.row)" v-if="scope.row.active == 0"
-              >激活</el-button
-            >
-            <el-button class="ml-2" size="mini" @click="updateConf(scope.row, 'update')"
-              >修改</el-button
-            >
-            <el-button class="ml-2" size="mini" @click="deleteConfById(scope.row.id)"
-              >删除</el-button
-            >
+            <section>
+              <el-button
+                title="设置"
+                size="small"
+                :icon="Setting"
+                :disabled="scope.row.active == 1"
+                circle
+                @click="updateConf(scope.row, 'active')"
+              />
+              <el-button
+                class="ml-2"
+                title="修改"
+                :icon="Edit"
+                circle
+                size="small"
+                @click="updateConf(scope.row, 'update')"
+              />
+              <el-button
+                title="删除"
+                type="danger"
+                size="small"
+                :icon="Delete"
+                @click="deleteConfById(scope.row.id)"
+                circle
+              />
+              <!-- <el-button class="ml-2" size="mini" @click="deleteConfById(scope.row.id)"
+                >删除</el-button
+              > -->
+            </section>
           </template>
         </el-table-column>
       </el-table>
@@ -73,10 +96,28 @@
           <el-input-number v-model="config.iou" :precision="1" :step="0.1" :max="1" />
         </el-form-item>
         <el-form-item label="imagz">
-          <el-input v-model="config.imagz" />
+          <el-select v-model="config.imagz" class="w-120px">
+            <el-option label="640" :value="640" />
+            <el-option label="1280" :value="1280" />
+          </el-select>
+          <!-- <el-input v-model.number="config.imagz" /> -->
+        </el-form-item>
+        <el-form-item label="remark">
+          <el-input
+            v-model="config.remark"
+            class="w-120px"
+            :rows="2"
+            type="textarea"
+            placeholder="描述"
+          />
+          <!-- <el-select v-model="config.remark" class="w-120px">
+            <el-option label="640" :value="640" />
+            <el-option label="1280" :value="1280" />
+          </el-select> -->
+          <!-- <el-input v-model.number="config.imagz" /> -->
         </el-form-item>
         <el-form-item label="是否激活">
-          <el-switch inactive-value="0" active-value="1" v-model="config.active" />
+          <el-switch :inactive-value="0" :active-value="1" v-model="config.active" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -90,10 +131,11 @@
 </template>
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus'
-import { updateConfig, deteleConfig, getConfigList } from '@/api/dashboard/config'
+import { Delete, Edit, Setting } from '@element-plus/icons-vue'
+import { updateConfig, deteleConfig, getConfigList, activeConfig } from '@/api/dashboard/config'
 import { ConfigItem } from '@/api/dashboard/config/types'
 import { getModel } from '@/api/dashboard/workplace'
-import { onMounted, Ref, shallowReactive, reactive } from 'vue'
+import { Ref, shallowReactive, reactive } from 'vue'
 import { ref } from 'vue'
 //弹框
 const dialogVisible: Ref<Boolean> = ref(false)
@@ -115,10 +157,11 @@ const query = shallowReactive({
 //配置
 const config = shallowReactive({
   id: '',
+  remark: '',
   ...baseConfig
 })
-const keys: string[] = ['name', 'module', 'conf', 'iou', 'imagz', 'active', 'created_at']
-const names: string[] = ['名称', '模型', '置信度', 'IOU', 'imagz', '是否激活', '创建时间']
+const keys: string[] = ['name', 'module', 'conf', 'iou', 'imagz', 'active', 'remark', 'created_at']
+const names: string[] = ['名称', '模型', '置信度', 'IOU', 'imagz', '是否激活', '描述', '创建时间']
 const detectList: CloumnItem[] = []
 
 interface RuleForm {
@@ -212,7 +255,7 @@ const queryList = () => {
 }
 
 const configAPI = async (params, type) => {
-  let res = await updateConfig(params, type)
+  let res = type == 'active' ? await activeConfig(params.id) : await updateConfig(params, type)
   if (res.code == 200) {
     dialogVisible.value = false
     queryList()
@@ -306,18 +349,13 @@ const handleClose = () => {
   dialogVisible.value = false
   resetForm(ruleFormRef.value)
 }
-onMounted(() => {
-  // getFish().then((res) => {
-  //   dataSource.value = res.data
+queryList()
+//获取模型
+getModel().then((res) => {
+  modules.value = res.data
+  // Object.assign(query, {
+  //   module: res.data[0]
   // })
-  queryList()
-  //获取模型
-  getModel().then((res) => {
-    modules.value = res.data
-    // Object.assign(query, {
-    //   module: res.data[0]
-    // })
-  })
 })
 </script>
 <style lang="less" scoped>

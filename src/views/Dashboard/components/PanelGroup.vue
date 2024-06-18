@@ -47,7 +47,7 @@ const loading = ref(false)
 
 <template>
   <ElRow :gutter="20" justify="space-between" :class="prefixCls">
-    <ElCol :xl="6" :lg="6" :md="12" :sm="12" :xs="24">
+    <ElCol :xl="8" :lg="8" :md="12" :sm="12" :xs="24">
       <ElCard shadow="hover" class="mb-20px">
         <ElSkeleton :loading="loading" animated :rows="2">
           <template #default>
@@ -76,7 +76,7 @@ const loading = ref(false)
       </ElCard>
     </ElCol>
 
-    <ElCol :xl="6" :lg="6" :md="12" :sm="12" :xs="24">
+    <ElCol :xl="8" :lg="8" :md="12" :sm="12" :xs="24">
       <ElCard shadow="hover" class="mb-20px">
         <ElSkeleton :loading="loading" animated :rows="2">
           <template #default>
@@ -105,7 +105,7 @@ const loading = ref(false)
       </ElCard>
     </ElCol>
 
-    <ElCol :xl="6" :lg="6" :md="12" :sm="12" :xs="24">
+    <ElCol :xl="8" :lg="8" :md="8" :sm="12" :xs="24">
       <ElCard shadow="hover" class="mb-20px">
         <ElSkeleton :loading="loading" animated :rows="2">
           <template #default>
@@ -134,7 +134,7 @@ const loading = ref(false)
       </ElCard>
     </ElCol>
 
-    <ElCol :xl="6" :lg="6" :md="12" :sm="12" :xs="24">
+    <!-- <ElCol :xl="6" :lg="6" :md="12" :sm="12" :xs="24">
       <ElCard shadow="hover" class="mb-20px">
         <ElSkeleton :loading="loading" animated :rows="2">
           <template #default>
@@ -161,7 +161,7 @@ const loading = ref(false)
           </template>
         </ElSkeleton>
       </ElCard>
-    </ElCol>
+    </ElCol> -->
   </ElRow>
 </template>
 

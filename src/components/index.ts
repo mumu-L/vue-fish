@@ -19,7 +19,10 @@ import {
   ElCard,
   ElInputNumber,
   ElDescriptions,
-  ElDescriptionsItem
+  ElDescriptionsItem,
+  ElRow,
+  ElCol,
+  ElIcon
 } from 'element-plus'
 import { DeleteFilled } from '@element-plus/icons-vue'
 const components = [
@@ -39,7 +42,10 @@ const components = [
   ElCard,
   ElInputNumber,
   ElDescriptions,
-  ElDescriptionsItem
+  ElDescriptionsItem,
+  ElRow,
+  ElCol,
+  ElIcon
 ]
 export const setupGlobCom = (app: App<Element>): void => {
   app.component('Icon', Icon)

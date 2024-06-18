@@ -6,6 +6,7 @@ import { ElMessage, ComponentSize } from 'element-plus'
 import { useCssVar } from '@vueuse/core'
 import { unref } from 'vue'
 import { useDark } from '@vueuse/core'
+import { Analysis } from '@/api/dashboard/analysis/types'
 
 interface AppState {
   breadcrumb: boolean
@@ -33,6 +34,7 @@ interface AppState {
   footer: boolean
   theme: ThemeTypes
   fixedMenu: boolean
+  analysisInfo: Analysis
 }
 
 export const useAppStore = defineStore('app', {
@@ -92,6 +94,17 @@ export const useAppStore = defineStore('app', {
         topHeaderHoverColor: '#f6f6f6',
         // 头部边框颜色
         topToolBorderColor: '#eee'
+      },
+      analysisInfo: {
+        panel: {
+          detectAll: 0, // 共检测
+          discern: 0, // 可识别
+          fullDiscern: 0, // 完整识别
+          accurateDiscern: 0, // 准确识别
+          today: 0 // 今日检测
+        },
+        indicator: {},
+        batchs: {}
       }
     }
   },
@@ -170,6 +183,9 @@ export const useAppStore = defineStore('app', {
     },
     getFooter(): boolean {
       return this.footer
+    },
+    getAnalysisInfo(): Analysis {
+      return this.analysisInfo
     }
   },
   actions: {
@@ -328,6 +344,14 @@ export const useAppStore = defineStore('app', {
         valueLight: 'light'
       })
       isDark.value = this.getIsDark
+    },
+    setAnalysisInfo(data: Analysis) {
+      this.analysisInfo = data
+    },
+    countToday() {
+      //今日检测和总检测自增1
+      this.analysisInfo.panel.detectAll++
+      this.analysisInfo.panel.today++
     }
   },
   persist: true

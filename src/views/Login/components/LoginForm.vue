@@ -186,16 +186,18 @@ const signIn = async () => {
 
         if (res) {
           // 是否记住我
-          if (unref(remember)) {
-            userStore.setLoginInfo({
-              username: formData.username,
-              password: formData.password
-            })
-          } else {
-            userStore.setLoginInfo(undefined)
-          }
+          //if (unref(remember)) {
+          //  userStore.setLoginInfo({
+          //    username: formData.username,
+          //    password: formData.password
+          //  })
+          //} else {
+          //  userStore.setLoginInfo(undefined)
+          //}
           userStore.setRememberMe(unref(remember))
-          userStore.setUserInfo(res.data)
+          userStore.setUserInfo(res.data.user)
+          //设置token
+          userStore.setToken('Bearer ' + res.data.access_token)
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             getRole()

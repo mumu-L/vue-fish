@@ -25,8 +25,16 @@ type Item = {
   [key: string]: []
 }
 export interface Analysis {
-  panel: Object
+  panel: PanelInfo
   indicator: Item
-  batchs: Item
-  modules: Item
+  batchs?: Item
+  modules?: Item
+}
+
+export interface PanelInfo {
+  detectAll: number
+  discern: number
+  fullDiscern: number
+  accurateDiscern?: number
+  today: number
 }

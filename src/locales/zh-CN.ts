@@ -7,7 +7,7 @@ export default {
     login: '登录',
     required: '该项为必填项',
     loginOut: '退出系统',
-    document: '项目文档',
+    // document: '项目文档',
     reminder: '温馨提示',
     loginOutMessage: '是否退出本系统？',
     back: '返回',
@@ -124,6 +124,7 @@ export default {
   },
   router: {
     config: '配置',
+    detectConfig: '检测配置',
     detect: '检测数据',
     detectTest: '模型测试数据',
     login: '登录',
@@ -224,7 +225,9 @@ export default {
     created_at: '时间',
     moduleContrast: '模型对比',
     moduleAndConf: '批次准确对比',
-    resultText: '检测结果'
+    resultText: '检测结果',
+    cls: '类别',
+    weight: '重量'
     // newUser: '新增用户',
     // unreadInformation: '未读消息',
     // transactionAmount: '成交金额',

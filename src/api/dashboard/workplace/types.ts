@@ -43,6 +43,26 @@ export interface ResponseModules<T> {
 }
 
 /**
+ * 检测
+ */
+export type Detect = {
+  module: string
+  conf: string | number
+  iou: string | number | null
+  imagz: string | number | null
+}
+//检测配置
+export type DetectConf = Detect & {
+  batch: string
+  camera: number
+}
+// /**
+//  * 检测传参
+//  */
+// export interface DetectQuery extends DetectConf {
+//   type: 'test' | 'detect'
+// }
+/**
  * 检测列表
  */
 export type DataSourceItem = {

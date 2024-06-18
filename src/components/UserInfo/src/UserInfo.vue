@@ -7,9 +7,6 @@ import { ref, computed } from 'vue'
 import LockPage from './components/LockPage.vue'
 import { useLockStore } from '@/store/modules/lock'
 import { useUserStore } from '@/store/modules/user'
-import { useRouter } from 'vue-router'
-
-const { push } = useRouter()
 
 const userStore = useUserStore()
 
@@ -34,13 +31,13 @@ const lockScreen = () => {
   dialogVisible.value = true
 }
 
-const toDocument = () => {
-  window.open('https://element-plus-admin-doc.cn/')
-}
+// const toDocument = () => {
+//   window.open('https://element-plus-admin-doc.cn/')
+// }
 
-const toPage = (path: string) => {
-  push(path)
-}
+// const toPage = (path: string) => {
+//   push(path)
+// }
 </script>
 
 <template>
@@ -52,19 +49,19 @@ const toPage = (path: string) => {
         class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
       />
       <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">{{
-        userStore.getUserInfo?.username
+        userStore.getUserInfo ? userStore.getUserInfo.username : ''
       }}</span>
     </div>
     <template #dropdown>
       <ElDropdownMenu>
-        <ElDropdownItem>
+        <!-- <ElDropdownItem>
           <div @click="toPage('/personal/personal-center')">
             {{ t('router.personalCenter') }}
           </div>
-        </ElDropdownItem>
-        <ElDropdownItem>
+        </ElDropdownItem> -->
+        <!-- <ElDropdownItem>
           <div @click="toDocument">{{ t('common.document') }}</div>
-        </ElDropdownItem>
+        </ElDropdownItem> -->
         <ElDropdownItem divided>
           <div @click="lockScreen">{{ t('lock.lockScreen') }}</div>
         </ElDropdownItem>

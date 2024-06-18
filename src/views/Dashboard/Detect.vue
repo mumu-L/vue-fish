@@ -1,5 +1,6 @@
 <template>
   <div style="height: 100%">
+    <a id="app1"></a>
     <el-card style="height: calc(100% - 10px); overflow-y: auto">
       <section>
         <el-form :inline="true" :model="query">
@@ -17,6 +18,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="queryList">查询</el-button>
+            <el-button type="success" @click="downCsv()">导出数据</el-button>
           </el-form-item>
         </el-form>
       </section>
@@ -71,11 +73,17 @@
             <el-image
               v-else-if="col.dataIndex == 'link'"
               :z-index="20"
-              preview-teleported="true"
+              :preview-teleported="true"
               style="width: 20px; height: 20px"
-              :src="'http://localhost:5000/file' + scope.row[col.dataIndex]"
-              :preview-src-list="['http://localhost:5000/file' + scope.row[col.dataIndex]]"
-            />
+              :src="'http://localhost:5000/file/img?url=' + scope.row[col.dataIndex]"
+              :preview-src-list="['http://localhost:5000/file/img?url=' + scope.row[col.dataIndex]]"
+            >
+              <template #error>
+                <div class="image-slot">
+                  <el-icon><Picture /></el-icon>
+                </div>
+              </template>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="90px">
@@ -127,10 +135,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getDetectList, getModel, deleteById } from '@/api/dashboard/workplace'
+import { getDetectList, getModel, deleteById, downFile } from '@/api/dashboard/workplace'
 import { DataSourceItem } from '@/api/dashboard/workplace/types'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Delete } from '@element-plus/icons-vue'
+import { Delete, Picture } from '@element-plus/icons-vue'
 import { onMounted, Ref, shallowReactive } from 'vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -145,7 +153,7 @@ let modules: Ref<string[]> = ref([])
 const query = shallowReactive({
   batch: '',
   module: '',
-  type: null
+  type: 'detect'
 })
 
 // const totle = computed(() => {
@@ -348,11 +356,26 @@ const deleteByIdType = async (id) => {
       })
     })
 }
+const downCsv = async () => {
+  let csv: any = await downFile({
+    type: query.type == 'test' ? '0' : '1'
+  })
+  let a = document.createElement('a')
+  // let file = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' })
+  let url = URL.createObjectURL(csv.data)
+  a.href = url
+  document.body.appendChild(a)
+  a.click()
+}
 creatCloumn()
 if (route.path.indexOf('test') > -1) {
   Object.assign(query, { type: 'test' })
 }
 onMounted(() => {
+  // let a = document.createElement('a')
+  // a.setAttribute('id', 'as')
+  // document.body.append(a)
+  // console.log('mount')
   // getFish().then((res) => {
   //   dataSource.value = res.data
   // })
